@@ -1,6 +1,13 @@
 #include "tg_tree.hpp"
 #include "utility.h"
 
+TG_Tree::TG_Tree()
+{
+}
+TG_Tree::~TG_Tree()
+{
+}
+
 static godot::Transform3D interpolate_path( const std::vector<godot::Transform3D> transforms,
                                             const std::vector<float> &distances, float offset )
 {

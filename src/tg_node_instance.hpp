@@ -2,7 +2,9 @@
 #define TG_NODE_INSTANCE_H
 
 #include "godot_cpp/core/binder_common.hpp"
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/transform3d.hpp>
+
 #include <vector>
 
 // Godot expects 4 floats per tangent. This struct should match the same layout.
@@ -65,16 +67,7 @@ public:
     std::vector<godot::Ref<TG_NodeInstance>> children;
 
 protected:
-    static void _bind_methods()
-    {
-        /*godot::register_method( "get_child_count", &TG_NodeInstance::get_child_count );
-        godot::register_method( "get_child", &TG_NodeInstance::get_child );
-        godot::register_method( "get_path_size", &TG_NodeInstance::get_path_size );
-        godot::register_method( "get_path_transform", &TG_NodeInstance::get_path_transform );
-
-        godot::register_property( "local_transform", &TG_NodeInstance::local_transform,
-                                  godot::Transform() );*/
-    }
+    static void _bind_methods();
 };
 
 #endif // TG_NODE_INSTANCE_H

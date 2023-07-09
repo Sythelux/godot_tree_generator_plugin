@@ -19,7 +19,8 @@ public:
         TYPE_COUNT
     };
 
-    void _init();
+    TG_Node();
+    ~TG_Node() override;
     Type get_type() const;
     void set_type( Type type );
     int get_local_seed() const;
@@ -38,25 +39,7 @@ public:
     const TG_Node &get_child_internal( int i ) const;
 
 protected:
-    static void _bind_methods()
-    {
-        /*godot::register_method("get_spawn_params", &TG_Node::_b_get_spawn_params);
-        godot::register_method("get_path_params", &TG_Node::_b_get_path_params);
-        godot::register_method("get_leaf_params", &TG_Node::_b_get_leaf_params);
-
-        godot::register_method("get_local_seed", &TG_Node::get_local_seed);
-        godot::register_method("set_local_seed", &TG_Node::set_local_seed);
-
-        godot::register_method("is_active", &TG_Node::is_active);
-        godot::register_method("set_active", &TG_Node::set_active);
-
-        godot::register_method("set_type", &TG_Node::_b_set_type);
-
-        godot::register_method("get_child_count", &TG_Node::get_child_count);
-        godot::register_method("get_child", &TG_Node::_b_get_child);
-        godot::register_method("add_child", &TG_Node::add_child);
-        godot::register_method("clear_children", &TG_Node::clear_children);*/
-    }
+    static void _bind_methods();
 
 private:
     godot::Ref<TG_SpawnParams> _b_get_spawn_params();

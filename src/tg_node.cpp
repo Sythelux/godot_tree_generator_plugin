@@ -1,10 +1,16 @@
 #include "tg_node.hpp"
-void TG_Node::_init()
+
+TG_Node::TG_Node()
 {
     _spawn_params.instantiate();
     _path_params.instantiate();
     _leaf_params.instantiate();
 }
+
+TG_Node::~TG_Node()
+{
+}
+
 TG_Node::Type TG_Node::get_type() const
 {
     return _type;
@@ -83,4 +89,23 @@ void TG_Node::_b_set_type( int type )
 {
     ERR_FAIL_INDEX( type, TYPE_COUNT );
     _type = static_cast<Type>( type );
+}
+void TG_Node::_bind_methods()
+{
+    /*godot::register_method("get_spawn_params", &TG_Node::_b_get_spawn_params);
+    godot::register_method("get_path_params", &TG_Node::_b_get_path_params);
+    godot::register_method("get_leaf_params", &TG_Node::_b_get_leaf_params);
+
+    godot::register_method("get_local_seed", &TG_Node::get_local_seed);
+    godot::register_method("set_local_seed", &TG_Node::set_local_seed);
+
+    godot::register_method("is_active", &TG_Node::is_active);
+    godot::register_method("set_active", &TG_Node::set_active);
+
+    godot::register_method("set_type", &TG_Node::_b_set_type);
+
+    godot::register_method("get_child_count", &TG_Node::get_child_count);
+    godot::register_method("get_child", &TG_Node::_b_get_child);
+    godot::register_method("add_child", &TG_Node::add_child);
+    godot::register_method("clear_children", &TG_Node::clear_children);*/
 }

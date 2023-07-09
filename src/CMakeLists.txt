@@ -9,6 +9,7 @@ target_sources(${PROJECT_NAME}
         tg_tree.cpp
         tg_node.cpp
         tg_node_instance.cpp
+        tg_spawn_params.cpp
         )
 
 target_include_directories(${PROJECT_NAME}

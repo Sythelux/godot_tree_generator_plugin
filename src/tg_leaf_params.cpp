@@ -10,3 +10,9 @@ void TG_LeafParams::_bind_methods()
     // 		godot::Ref<godot::Mesh>(), GODOT_METHOD_RPC_MODE_DISABLED,
     // GODOT_PROPERTY_USAGE_DEFAULT, 		GODOT_PROPERTY_HINT_RESOURCE_TYPE, "Mesh");
 }
+TG_LeafParams::TG_LeafParams()
+{
+}
+TG_LeafParams::~TG_LeafParams()
+{
+}
