@@ -12,9 +12,8 @@ CTestTestfile.cmake
 _deps
 .cmake/
 
-# Godot
-.import/
-logs/
+# Godot 4+ specific ignores
+.godot/
 
 # Misc
 debug.bat
@@ -36,7 +35,11 @@ addons/zylann.treegen/native/src/*.obj
 # VSCode
 *.vs/
 .vscode/
-/.ninja_deps
-/.ninja_log
-/addons/zylann.treegen/lib/*
+
+# ninja
+.ninja_deps
+.ninja_log
 /build.ninja
+
+
+/addons/zylann.treegen/lib/*
