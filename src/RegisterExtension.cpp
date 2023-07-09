@@ -6,10 +6,10 @@
 #include "godot_cpp/godot.hpp"
 #include "tg_leaf_params.hpp"
 #include "tg_node.hpp"
-//#include "tg_tree.hpp"
 #include "tg_node_instance.hpp"
 #include "tg_path_params.hpp"
 #include "tg_spawn_params.hpp"
+#include "tg_tree.hpp"
 
 /// @file
 /// Register our classes with Godot.
@@ -33,7 +33,7 @@ namespace
         godot::ClassDB::register_class<TG_PathParams>();
         godot::ClassDB::register_class<TG_Node>();
         godot::ClassDB::register_class<TG_NodeInstance>();
-//        godot::ClassDB::register_class<TG_Tree>();
+        godot::ClassDB::register_class<TG_Tree>();
     }
 
     /// @brief Called by Godot to let us do any cleanup.

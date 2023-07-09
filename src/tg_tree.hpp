@@ -2,7 +2,9 @@
 #define TG_TREE_H
 
 #include <godot_cpp/classes/curve.hpp>
+#include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/mesh.hpp>
+#include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/variant/transform3d.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
@@ -12,11 +14,6 @@
 // Note:
 // I would have loved using namespaces but `GODOT_CLASS` registers the class without it,
 // and in that case it would conflict with existing Godot classes...
-
-namespace godot
-{
-    class RandomNumberGenerator;
-}
 
 class TG_Tree : public godot::RefCounted
 {
