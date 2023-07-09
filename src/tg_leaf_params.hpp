@@ -12,12 +12,12 @@ public:
     ~TG_LeafParams() override;
 
     int getID() const;
-    
+
     int material_index = 0;
     float scale = 1.f;
     float scale_jitter = 0.f;
-  
-  protected:
+
+protected:
     static void _bind_methods();
     // godot::Ref<godot::Mesh> mesh;
 };
