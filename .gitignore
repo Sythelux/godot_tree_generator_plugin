@@ -36,3 +36,7 @@ addons/zylann.treegen/native/src/*.obj
 # VSCode
 *.vs/
 .vscode/
+/.ninja_deps
+/.ninja_log
+/addons/zylann.treegen/lib/*
+/build.ninja
