@@ -529,7 +529,8 @@ static godot::Array combine_mesh_surfaces( const TG_NodeInstance &root_node_inst
         gd_surface[godot::Mesh::ARRAY_VERTEX] = to_packed_array( src_surface.positions );
         gd_surface[godot::Mesh::ARRAY_NORMAL] = to_packed_array( src_surface.normals );
         gd_surface[godot::Mesh::ARRAY_TEX_UV] = to_packed_array( src_surface.uvs );
-        gd_surface[godot::Mesh::ARRAY_TANGENT] = to_Packed_real_array_reinterpret( src_surface.tangents );
+        gd_surface[godot::Mesh::ARRAY_TANGENT] =
+            to_Packed_real_array_reinterpret( src_surface.tangents );
         gd_surface[godot::Mesh::ARRAY_INDEX] = to_packed_array( src_surface.indices );
         gd_surfaces[static_cast<int>( i )] = gd_surface;
     }
@@ -544,7 +545,7 @@ static void generate_node_leaf( const TG_Node &node, TG_NodeInstance &node_insta
 
     TG_SurfaceData &surface =
         get_or_create_surface( node_instance.surfaces, leaf_params.material_index );
-    const godot::Transform3D trans = godot::Transform(); // node_instance.local_transform;
+    const godot::Transform3D trans = godot::Transform3D(); // node_instance.local_transform;
 
     float scale = leaf_params.scale;
     if ( leaf_params.scale_jitter > 0.f )

@@ -1,6 +1,8 @@
 #ifndef TG_NODE_INSTANCE_H
 #define TG_NODE_INSTANCE_H
 
+#include <godot_cpp/variant/transform3d.hpp>
+#include "godot_cpp/core/binder_common.hpp"
 #include <vector>
 
 // Godot expects 4 floats per tangent. This struct should match the same layout.
@@ -42,9 +44,9 @@ public:
         return static_cast<int>( path.size() );
     }
 
-    godot::Transform get_path_transform( int i ) const
+    godot::Transform3D get_path_transform( int i ) const
     {
-        ERR_FAIL_INDEX_V( i, path.size(), godot::Transform() );
+        ERR_FAIL_INDEX_V( i, path.size(), godot::Transform3D() );
         return path[i];
     }
 

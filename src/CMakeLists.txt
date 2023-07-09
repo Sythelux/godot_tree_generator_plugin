@@ -5,7 +5,7 @@ target_sources( ${PROJECT_NAME}
         RegisterExtension.cpp
         tg_leaf_params.cpp
         tg_path_params.cpp
-        tg_tree.cpp
+#        tg_tree.cpp
         tg_node.cpp
         tg_node_instance.cpp
 )
