@@ -163,7 +163,7 @@ func _parse_scene_nodes_recursive(scene_node: TreeGenNode, material_to_index: Di
 #
 #func _debug_axes(path: Array):
 #	for trans in path:
-#		var axes = AxesScene.instance()
+#		var axes = AxesScene.instantiate()
 #		axes.transform = trans
 #		axes.add_to_group("zylann.treegen.debug_axes")
 #		add_child(axes)
