@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const TreeGenTree = preload("../treegen_tree.gd")
@@ -17,14 +17,14 @@ static func get_icon(name):
 
 
 func _enter_tree():
-	add_custom_type("TreeGenTree", "Spatial", TreeGenTree, get_icon("tree_node"))
+	add_custom_type("TreeGenTree", "Node3D", TreeGenTree, get_icon("tree_node"))
 	add_custom_type("TreeGenBranch", "Node", TreeGenBranch, get_icon("tree_node"))
 	add_custom_type("TreeGenLeaf", "Node", TreeGenLeaf, get_icon("tree_node"))
 
 	_menu = MenuButton.new()
 	_menu.set_text("Tree")
 	_menu.get_popup().add_item("Save As Mesh...", MENU_SAVE_AS_MESH)
-	_menu.get_popup().connect("id_pressed", self, "_on_menu_id_pressed")
+	_menu.get_popup().connect("id_pressed", Callable(self, "_on_menu_id_pressed"))
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, _menu)
 	_menu.hide()
 
@@ -32,12 +32,12 @@ func _enter_tree():
 	var base_control := editor_interface.get_base_control()
 
 	_save_file_dialog = EditorFileDialog.new()
-	_save_file_dialog.mode = EditorFileDialog.MODE_SAVE_FILE
+	_save_file_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
 	_save_file_dialog.add_filter("*.mesh ; MESH files")
-	_save_file_dialog.resizable = true
+	# _save_file_dialog.resizable = true
 	_save_file_dialog.access = EditorFileDialog.ACCESS_RESOURCES
 	#_save_file_dialog.current_dir = 
-	_save_file_dialog.connect("file_selected", self, "_on_save_file_dialog_file_selected")
+	_save_file_dialog.connect("file_selected", Callable(self, "_on_save_file_dialog_file_selected"))
 	base_control.add_child(_save_file_dialog)
 
 
@@ -51,7 +51,7 @@ func handles(obj: Object) -> bool:
 	return obj is TreeGenTree
 
 
-func make_visible(visible: bool):
+func _make_visible(visible: bool):
 	_menu.visible = visible
 
 
@@ -71,4 +71,4 @@ func _on_menu_id_pressed(id: int):
 
 func _on_save_file_dialog_file_selected(fpath: String):
 	var mesh := _tree_node.get_generated_mesh()
-	ResourceSaver.save(fpath, mesh)
+	ResourceSaver.save(mesh, fpath)

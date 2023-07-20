@@ -1,5 +1,6 @@
-tool
-extends "treegen_node.gd"
+@tool
+extends TreeGenNode
+class_name TreeGenLeaf
 
 const _leaf_properties = {
 	"leaf_scale": 0,
@@ -40,18 +41,18 @@ func _get_property_list() -> Array:
 
 	props.append_array([
 		{
-			"name": "Shape",
+			"name": "Shape3D",
 			"type": TYPE_NIL,
 			"usage": PROPERTY_USAGE_GROUP
 		},
 		{
 			"name": "leaf_scale",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
 			"name": "leaf_scale_jitter",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		}
 	])
@@ -76,7 +77,7 @@ func _get_property_list() -> Array:
 	return props
 
 
-func _get(p_key: String):
+func _get(p_key: StringName) -> Variant:
 	if p_key == "local_seed":
 		return _data.get_local_seed()
 	
@@ -91,7 +92,7 @@ func _get(p_key: String):
 	return null
 
 
-func _set(p_key: String, value):
+func _set(p_key: StringName, value) -> bool:
 	if p_key == "local_seed":
 		_data.set_local_seed(value)
 		_on_data_changed()

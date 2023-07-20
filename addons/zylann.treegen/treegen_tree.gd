@@ -1,11 +1,12 @@
+@tool
 # This is a wrapper for the tree generator, exposed as a scene node.
 # It is not really meant to be used in a game, but more as an editor helper to design the tree.
 # The generator is implemented with GDNative with more low-level classes.
 
-tool
-extends Spatial
+extends Node3D
+class_name TreeGenTree
 
-const TG_Tree = preload("./native/tg_tree.gdns")
+# const TG_Tree = preload("./native/tg_tree.gdns")
 # TODO Cannot reliably use NativeScripts for type hinting yet
 # See https://github.com/godotengine/godot-cpp/issues/430
 #const TG_Node = preload("./native/tg_node.gdns")
@@ -15,12 +16,12 @@ const TreeGenNode = preload("./treegen_node.gd")
 const AxesScene = preload("./axes.tscn")
 
 # Global params
-export(int) var global_seed = 0 setget set_global_seed
+@export var global_seed: int = 0: set = set_global_seed
 
 # Quality settings
-export(float) var mesh_divisions_per_unit := 1.0 setget set_mesh_divisions_per_unit
-export(float) var branch_segments_per_unit := 1.0 setget set_branch_segments_per_unit
-export(bool) var constant_mesh_divisions := false setget set_constant_mesh_divisions
+@export var mesh_divisions_per_unit := 1.0: set = set_mesh_divisions_per_unit
+@export var branch_segments_per_unit := 1.0: set = set_branch_segments_per_unit
+@export var constant_mesh_divisions := false: set = set_constant_mesh_divisions
 
 # Tree
 var _generator = TG_Tree.new()
@@ -69,11 +70,11 @@ func generate():
 		node.queue_free()
 	_nodes.clear()
 	
-	var time_before = OS.get_ticks_msec()
+	var time_before = Time.get_ticks_msec()
 	var surfaces = _generator.generate()
-	var elapsed_gen = OS.get_ticks_msec() - time_before
+	var elapsed_gen = Time.get_ticks_msec() - time_before
 	
-	time_before = OS.get_ticks_msec()
+	time_before = Time.get_ticks_msec()
 
 	var mesh := ArrayMesh.new()
 	for i in len(surfaces):
@@ -84,13 +85,13 @@ func generate():
 
 	_generated_mesh = mesh
 
-	var mi = MeshInstance.new()
+	var mi = MeshInstance3D.new()
 	mi.use_in_baked_light = true
 	mi.mesh = mesh
 	add_child(mi)
 	_nodes.append(mi)
 
-	var elapsed_mesh = OS.get_ticks_msec() - time_before
+	var elapsed_mesh = Time.get_ticks_msec() - time_before
 	
 	if OS.is_stdout_verbose():
 		print("TreeGen: gen: ", elapsed_gen, ", mesh: ", elapsed_mesh)
@@ -161,7 +162,7 @@ func _parse_scene_nodes_recursive(scene_node: TreeGenNode, material_to_index: Di
 #			child.queue_free()	
 #
 #
-#func _debug_axes(path: Array):
+#func _debug_axes(path: Array):g
 #	for trans in path:
 #		var axes = AxesScene.instantiate()
 #		axes.transform = trans

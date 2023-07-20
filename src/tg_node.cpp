@@ -92,6 +92,23 @@ void TG_Node::_b_set_type( int type )
 }
 void TG_Node::_bind_methods()
 {
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_spawn_params" ), &TG_Node::_b_get_spawn_params );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_path_params" ), &TG_Node::_b_get_path_params );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_leaf_params" ), &TG_Node::_b_get_leaf_params );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_local_seed" ), &TG_Node::get_local_seed );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_local_seed" ), &TG_Node::set_local_seed );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "is_active" ), &TG_Node::is_active );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_active" ), &TG_Node::set_active );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_type" ), &TG_Node::_b_set_type );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_child_count" ), &TG_Node::get_child_count );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_child" ), &TG_Node::_b_get_child );
+    godot::ClassDB::bind_method( godot::D_METHOD( "add_child" ), &TG_Node::add_child );
+    godot::ClassDB::bind_method( godot::D_METHOD( "clear_children" ), &TG_Node::clear_children );
+
     /*godot::register_method("get_spawn_params", &TG_Node::_b_get_spawn_params);
     godot::register_method("get_path_params", &TG_Node::_b_get_path_params);
     godot::register_method("get_leaf_params", &TG_Node::_b_get_leaf_params);
@@ -105,7 +122,7 @@ void TG_Node::_bind_methods()
     godot::register_method("set_type", &TG_Node::_b_set_type);
 
     godot::register_method("get_child_count", &TG_Node::get_child_count);
-    godot::register_method("get_child", &TG_Node::_b_get_child);
+    godot::register_method("get_child", &TG_Node::get_child);
     godot::register_method("add_child", &TG_Node::add_child);
     godot::register_method("clear_children", &TG_Node::clear_children);*/
 }

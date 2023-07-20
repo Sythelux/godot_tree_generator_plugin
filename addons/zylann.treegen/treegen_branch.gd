@@ -1,5 +1,6 @@
-tool
-extends "treegen_node.gd"
+@tool
+extends TreeGenNode
+class_name TreeGenBranch
 
 const _path_properties = {
 	"path_length": 0,
@@ -85,12 +86,12 @@ func _get_property_list() -> Array:
 		},
 		{
 			"name": "path_length",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
 			"name": "path_length_randomness",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
@@ -102,18 +103,18 @@ func _get_property_list() -> Array:
 		},
 		#####################################################
 		{
-			"name": "Shape",
+			"name": "Shape3D",
 			"type": TYPE_NIL,
 			"usage": PROPERTY_USAGE_GROUP
 		},
 		{
 			"name": "path_min_radius",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
 			"name": "path_max_radius",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
@@ -143,7 +144,7 @@ func _get_property_list() -> Array:
 		},
 		{
 			"name": "path_noise_period",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
@@ -153,18 +154,18 @@ func _get_property_list() -> Array:
 		},
 		{
 			"name": "path_noise_amplitude",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
 			"name": "path_noise_curve",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"hint": PROPERTY_HINT_EXP_EASING,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		},
 		{
 			"name": "path_seek_sun",
-			"type": TYPE_REAL,
+			"type": TYPE_FLOAT,
 			"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 		}
 	])
@@ -201,7 +202,7 @@ func _get_property_list() -> Array:
 	return props
 
 
-func _get(p_key: String):
+func _get(p_key: StringName) -> Variant:
 	if p_key == "local_seed":
 		return _data.get_local_seed()
 	
@@ -222,7 +223,7 @@ func _get(p_key: String):
 	return null
 
 
-func _set(p_key: String, value):
+func _set(p_key: StringName, value) -> bool:
 	if p_key == "local_seed":
 		_data.set_local_seed(value)
 		_on_data_changed()

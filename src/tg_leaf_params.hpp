@@ -11,13 +11,20 @@ public:
     TG_LeafParams();
     ~TG_LeafParams() override;
 
-    int material_index = 0;
-    float scale = 1.f;
-    float scale_jitter = 0.f;
+    int getMaterialIndex() const;
+    void setMaterialIndex( int materialIndex );
+    float getScale() const;
+    void setScale( float scale );
+    float getScaleJitter() const;
+    void setScaleJitter( float scaleJitter );
 
 protected:
     static void _bind_methods();
     // godot::Ref<godot::Mesh> mesh;
+private:
+    int material_index = 0;
+    float scale = 1.f;
+    float scale_jitter = 0.f;
 };
 
 #endif // TG_LEAF_PARAMS_H

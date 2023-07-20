@@ -9,6 +9,13 @@ TG_NodeInstance::~TG_NodeInstance()
 }
 void TG_NodeInstance::_bind_methods()
 {
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_child_count" ), &TG_NodeInstance::get_child_count );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_child" ), &TG_NodeInstance::get_child );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_path_size" ), &TG_NodeInstance::get_path_size );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_path_transform" ), &TG_NodeInstance::get_path_transform );
+    //    godot::ClassDB::add_property(godot::D_METHOD("local_transform"), &TG_NodeInstance::local_transform, godot::Transform3D());
+
     /*godot::register_method( "get_child_count", &TG_NodeInstance::get_child_count );
     godot::register_method( "get_child", &TG_NodeInstance::get_child );
     godot::register_method( "get_path_size", &TG_NodeInstance::get_path_size );

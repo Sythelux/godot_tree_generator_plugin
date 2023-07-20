@@ -1,10 +1,11 @@
-tool
+@tool
 extends Node
+class_name TreeGenNode
 
 # Using `var` instead of `const` because otherwise it creates a cyclic dependency
-var TreeGenTree = load("res://addons/zylann.treegen/treegen_tree.gd")
-var TreeGenNode = load("res://addons/zylann.treegen/treegen_node.gd")
-const TG_Node = preload("./native/tg_node.gdns")
+#var TreeGenTree = load("res://addons/zylann.treegen/treegen_tree.gd")
+#var TreeGenNode = load("res://addons/zylann.treegen/treegen_node.gd")
+# const TG_Node = preload("./native/tg_node.gdns")
 const Util = preload("./util.gd")
 
 const TG_NODE_TYPE_BRANCH = 0
@@ -40,22 +41,22 @@ const _spawn_properties_list = [
 	},
 	{
 		"name": "spawn_along_amount_per_unit",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_along_begin_ratio",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_along_end_ratio",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_along_jitter",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	#####################################################
@@ -71,17 +72,17 @@ const _spawn_properties_list = [
 	},
 	{
 		"name": "spawn_around_jitter",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_around_offset",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_skip_probability",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	#####################################################
@@ -92,23 +93,25 @@ const _spawn_properties_list = [
 	},
 	{
 		"name": "spawn_vertical_angle",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	},
 	{
 		"name": "spawn_vertical_angle_jitter",
-		"type": TYPE_REAL,
+		"type": TYPE_FLOAT,
 		"usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE
 	}
 ]
 
 
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
+	var retArr = []
+	var p = get_parent()
 	if _tree == null:
-		return "This node must be under a TreeGen root"
-	if not (get_parent() is TreeGenNode or get_parent() is TreeGenTree):
-		return "This node must be under a TreeGen node"
-	return ""
+		retArr.append("This node must be under a TreeGen root")
+	if not (p is TreeGenNode or p is TreeGenTree or p is TreeGenBranch or p is TreeGenLeaf):
+		retArr.append("This node must be under a TreeGen node")
+	return retArr
 
 
 func get_materials() -> Array:
@@ -124,7 +127,7 @@ func assign_material_indexes(material_to_index: Dictionary):
 func _notification(what: int):
 	match what:
 		NOTIFICATION_PARENTED:
-			_tree = Util.get_node_in_parents(self, TreeGenTree)
+			_tree = Util.get_tree_root(self)
 			if _tree != null:
 				_tree.schedule_parsing()
 	
@@ -146,13 +149,13 @@ func _on_data_changed():
 func _set_resource_property(obj: Object, key: String, value: Resource):
 	var prev : Resource = obj.get(key)
 	if prev != null:
-		prev.disconnect("changed", self, "_on_data_changed")
+		prev.disconnect("changed", Callable(self, "_on_data_changed"))
 	obj.set(key, value)
 	if value != null:
-		value.connect("changed", self, "_on_data_changed")
+		value.connect("changed", Callable(self, "_on_data_changed"))
 
 
-func _get(p_key: String):
+func _get(p_key: StringName) -> Variant:
 	if p_key == "active":
 		return _data.is_active()
 
@@ -164,7 +167,7 @@ func _get(p_key: String):
 	return null
 
 
-func _set(p_key: String, value):
+func _set(p_key: StringName, value) -> bool:
 	if p_key == "active":
 		_data.set_active(value)
 		_on_data_changed()

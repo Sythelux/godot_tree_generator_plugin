@@ -551,14 +551,14 @@ static void generate_node_leaf( const TG_Node &node, TG_NodeInstance &node_insta
     const TG_LeafParams &leaf_params = node.get_leaf_params();
 
     TG_SurfaceData &surface =
-        get_or_create_surface( node_instance.surfaces, leaf_params.material_index );
+        get_or_create_surface( node_instance.surfaces, leaf_params.getMaterialIndex() );
     const godot::Transform3D trans = godot::Transform3D(); // node_instance.local_transform;
 
-    float scale = leaf_params.scale;
-    if ( leaf_params.scale_jitter > 0.f )
+    float scale = leaf_params.getScale();
+    if ( leaf_params.getScaleJitter() > 0.f )
     {
         scale +=
-            leaf_params.scale_jitter * rng.randf_range( -leaf_params.scale, leaf_params.scale );
+            leaf_params.getScaleJitter() * rng.randf_range( -leaf_params.getScale(), leaf_params.getScale() );
     }
 
     // Let's start with a simple quad
@@ -754,22 +754,19 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
 
     const TG_SpawnParams &spawn_params = node.get_spawn_params();
 
-    const float relative_offset_ratio =
-        ( node_instance.offset_ratio - spawn_params.along_begin_ratio ) /
-        ( spawn_params.along_end_ratio - spawn_params.along_begin_ratio );
+    const float relative_offset_ratio = ( node_instance.offset_ratio - spawn_params.along_begin_ratio ) / ( spawn_params.along_end_ratio - spawn_params.along_begin_ratio );
 
     const TG_PathParams &path_params = node.get_path_params();
 
     // Calculate expected length
 
-    float length_with_modifiers = path_params.length;
-    if ( path_params.length_curve_along_parent.is_valid() )
+    float length_with_modifiers = path_params.getLength();
+    if ( path_params.getLengthCurveAlongParent().is_valid() )
     {
-        godot::Ref<godot::Curve> curve = path_params.length_curve_along_parent;
+        const godot::Ref<godot::Curve> &curve = path_params.getLengthCurveAlongParent();
         length_with_modifiers *= curve->sample_baked( relative_offset_ratio );
     }
-    length_with_modifiers +=
-        path_params.length_randomness * rng.randf_range( -1.0, 1.0 ) * length_with_modifiers;
+    length_with_modifiers += path_params.getLengthRandomness() * rng.randf_range( -1.0, 1.0 ) * length_with_modifiers;
 
     //    float radius_multiplier = 1.0;
     //    if ( path_params.radius_curve_along_parent.is_valid() )
@@ -794,28 +791,23 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
     // Plot base points
 
     godot::Transform3D trans;
-    const float default_radius = 0.5f * ( path_params.min_radius + path_params.max_radius );
-    godot::Ref<godot::Curve> radius_curve = path_params.radius_curve;
+    const float default_radius = 0.5f * ( path_params.getMinRadius() + path_params.getMaxRadius() );
+    godot::Ref<godot::Curve> radius_curve = path_params.getRadiusCurve();
 
     for ( int i = 0; i < point_count; ++i )
     {
         const float k = static_cast<float>( i ) / point_count;
 
-        const float r =
-            path_params.radius_curve.is_valid()
-                ? godot::Math::lerp( (double)path_params.min_radius, (double)path_params.max_radius,
-                                     radius_curve->sample_baked( k ) )
-                : default_radius;
+        const float r = path_params.getRadiusCurve().is_valid() ? godot::Math::lerp( (double)path_params.getMinRadius(), (double)path_params.getMaxRadius(), radius_curve->sample_baked( k ) ) : default_radius;
 
         radii.push_back( r );
         path.push_back( trans );
 
-        if ( path_params.seek_sun != 0.f )
+        if ( path_params.getSeekSun() != 0.f )
         {
-            const float seek_sun = path_params.seek_sun / _branch_segments_per_unit;
+            const float seek_sun = path_params.getSeekSun() / _branch_segments_per_unit;
             const godot::Vector3 tend_dir = sun_dir_local * godot::Math::sign( seek_sun );
-            const float a =
-                godot::Math::sign( seek_sun ) * trans.basis.get_column( 1 ).angle_to( tend_dir );
+            const float a = godot::Math::sign( seek_sun ) * trans.basis.get_column( 1 ).angle_to( tend_dir );
             if ( fabs( a ) > 0.001f )
             {
                 godot::Vector3 axis = trans.basis.get_column( 1 ).cross( tend_dir ).normalized();
@@ -827,7 +819,7 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
     }
 
     // Apply noise
-    if ( path_params.noise_amplitude != 0.f )
+    if ( path_params.getNoiseAmplitude() != 0.f )
     {
         // TODO Add `noise_discrepancy` to make each branch bifurcate more diferently
         godot::Ref<godot::FastNoiseLite> noise_x;
@@ -836,19 +828,19 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
 
         noise_x.instantiate();
         noise_x->set_seed( _global_seed + node.get_local_seed() );
-        noise_x->set_fractal_octaves( path_params.noise_octaves );
+        noise_x->set_fractal_octaves( path_params.getNoiseOctaves() );
         //        noise_x->set_period( path_params.noise_period ); //TODO. what is the alternative
         //        in gd4 to this ~Syd
 
         noise_y.instantiate();
         noise_y->set_seed( _global_seed + node.get_local_seed() + 1 );
-        noise_y->set_fractal_octaves( path_params.noise_octaves );
+        noise_y->set_fractal_octaves( path_params.getNoiseOctaves() );
         //        noise_y->set_period( path_params.noise_period ); //TODO. what is the alternative
         //        in gd4 to this ~Syd
 
         noise_z.instantiate();
         noise_z->set_seed( _global_seed + node.get_local_seed() + 2 );
-        noise_z->set_fractal_octaves( path_params.noise_octaves );
+        noise_z->set_fractal_octaves( path_params.getNoiseOctaves() );
         //        noise_z->set_period( path_params.noise_period ); //TODO. what is the alternative
         //        in gd4 to this ~Syd
 
@@ -857,11 +849,8 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
             const float k = static_cast<float>( i ) / point_count;
             godot::Transform3D &transPath =
                 path[i]; // TODO: was godot::Transform3D &trans = path[i];
-            const float amp = path_params.noise_amplitude * pow( k, path_params.noise_curve );
-            const godot::Vector3 disp =
-                amp * godot::Vector3( noise_x->get_noise_3dv( transPath.origin ),
-                                      noise_y->get_noise_3dv( transPath.origin ),
-                                      noise_z->get_noise_3dv( transPath.origin ) );
+            const float amp = path_params.getNoiseAmplitude() * pow( k, path_params.getNoiseCurve() );
+            const godot::Vector3 disp = amp * godot::Vector3( noise_x->get_noise_3dv( transPath.origin ), noise_y->get_noise_3dv( transPath.origin ), noise_z->get_noise_3dv( transPath.origin ) );
             transPath.origin += disp;
         }
     }
@@ -888,10 +877,7 @@ void TG_Tree::generate_node_path( const TG_Node &node, TG_NodeInstance &node_ins
     // Recalculate orientations after modifiers
     calc_orientations( path, segment_length );
 
-    generate_path_mesh( node_instance.surfaces, path, radii, distances, _mesh_divisions_per_unit,
-                        path_params.end_cap_flat, path_params.main_material_index,
-                        path_params.cap_material_index, path_params.uv_scale,
-                        _constant_mesh_divisions );
+    generate_path_mesh( node_instance.surfaces, path, radii, distances, _mesh_divisions_per_unit, path_params.isEndCapFlat(), path_params.getMainMaterialIndex(), path_params.getCapMaterialIndex(), path_params.getUvScale(), _constant_mesh_divisions );
 }
 
 void TG_Tree::generate_spawns( std::vector<SpawnInfo> &transforms, const TG_SpawnParams &params,
@@ -950,26 +936,22 @@ void TG_Tree::generate_spawns( std::vector<SpawnInfo> &transforms, const TG_Spaw
 
 void TG_Tree::_bind_methods()
 {
-    //    godot::register_method( "set_global_seed", &TG_Tree::set_global_seed );
-    //    godot::register_method( "get_global_seed", &TG_Tree::get_global_seed );
-    //
-    //    godot::register_method( "get_mesh_divisions_per_unit",
-    //    &TG_Tree::get_mesh_divisions_per_unit ); godot::register_method(
-    //    "set_mesh_divisions_per_unit", &TG_Tree::set_mesh_divisions_per_unit );
-    //
-    //    godot::register_method( "get_branch_segments_per_unit",
-    //                            &TG_Tree::get_branch_segments_per_unit );
-    //    godot::register_method( "set_branch_segments_per_unit",
-    //                            &TG_Tree::set_branch_segments_per_unit );
-    //
-    //    godot::register_method( "get_constant_mesh_divisions",
-    //    &TG_Tree::get_constant_mesh_divisions ); godot::register_method(
-    //    "set_constant_mesh_divisions", &TG_Tree::set_constant_mesh_divisions );
-    //
-    //    godot::register_method( "get_root_node", &TG_Tree::get_root_node );
-    //    godot::register_method( "set_root_node", &TG_Tree::set_root_node );
-    //
-    //    godot::register_method( "get_root_node_instance", &TG_Tree::get_root_node_instance );
-    //
-    //    godot::register_method( "generate", &TG_Tree::generate );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_global_seed" ), &TG_Tree::set_global_seed );
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_global_seed" ), &TG_Tree::get_global_seed );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_mesh_divisions_per_unit" ), &TG_Tree::get_mesh_divisions_per_unit );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_mesh_divisions_per_unit" ), &TG_Tree::set_mesh_divisions_per_unit );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_branch_segments_per_unit" ), &TG_Tree::get_branch_segments_per_unit );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_branch_segments_per_unit" ), &TG_Tree::set_branch_segments_per_unit );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_constant_mesh_divisions" ), &TG_Tree::get_constant_mesh_divisions );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_constant_mesh_divisions" ), &TG_Tree::set_constant_mesh_divisions );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_root_node" ), &TG_Tree::get_root_node );
+    godot::ClassDB::bind_method( godot::D_METHOD( "set_root_node" ), &TG_Tree::set_root_node );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "get_root_node_instance" ), &TG_Tree::get_root_node_instance );
+
+    godot::ClassDB::bind_method( godot::D_METHOD( "generate" ), &TG_Tree::generate );
 }

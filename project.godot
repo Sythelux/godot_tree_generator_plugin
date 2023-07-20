@@ -20,8 +20,8 @@ project/assembly_name="Tree generator"
 
 [editor_plugins]
 
-enabled=PackedStringArray("zylann.treegen")
+enabled=PackedStringArray("res://addons/zylann.treegen/plugin.cfg")
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+environment/defaults/default_environment="res://default_env.tres"
