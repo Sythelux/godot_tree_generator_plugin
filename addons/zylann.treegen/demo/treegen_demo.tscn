@@ -1,8 +1,35 @@
-[gd_scene load_steps=7 format=3 uid="uid://ddr1e01u7c22"]
+[gd_scene load_steps=16 format=3 uid="uid://ddr1e01u7c22"]
 
 [ext_resource type="Script" path="res://addons/zylann.treegen/treegen_tree.gd" id="1"]
 [ext_resource type="Script" path="res://addons/zylann.treegen/treegen_branch.gd" id="2"]
+[ext_resource type="Material" path="res://addons/zylann.treegen/demo/materials/bark/trunk_material.tres" id="3_wef8g"]
+[ext_resource type="Material" path="res://addons/zylann.treegen/demo/materials/nub/nub_material.tres" id="4_ep5sq"]
 [ext_resource type="Script" path="res://addons/zylann.treegen/treegen_leaf.gd" id="5"]
+[ext_resource type="Material" uid="uid://11scicm1iubq" path="res://addons/zylann.treegen/demo/materials/leaf/leaf_shader_material.tres" id="6_m53qe"]
+
+[sub_resource type="Curve" id="Curve_yqe46"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_h3tey"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_ubo8i"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_rkj7p"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.460145, 0.557895), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_jarwg"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_sicvj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="StandardMaterial3D" id="10"]
 albedo_color = Color(0.266667, 0.443137, 0.133333, 1)
@@ -22,15 +49,118 @@ mesh_divisions_per_unit = 4.0
 
 [node name="TreeGenBranch" type="Node" parent="TreeGenTree"]
 script = ExtResource("2")
+active = true
+local_seed = 0
+path_length = 15.0
+path_length_randomness = 0.0
+path_length_curve_along_parent = SubResource("Curve_yqe46")
+path_min_radius = 0.3
+path_max_radius = 1.0
+path_radius_curve = SubResource("Curve_h3tey")
+path_radius_curve_along_parent = null
+end_cap_flat = true
+path_noise_period = 16.0
+path_noise_octaves = 3
+path_noise_amplitude = 0.0
+path_noise_curve = 1.0
+path_seek_sun = 0.0
+spawn_along_base_amount = 10
+spawn_along_amount_per_unit = 0.0
+spawn_along_begin_ratio = 0.0
+spawn_along_end_ratio = 1.0
+spawn_along_jitter = 0.0
+spawn_around_amount = 5
+spawn_around_jitter = 0.75
+spawn_around_offset = 0.0
+spawn_skip_probability = 0.0
+spawn_vertical_angle = 1.0472
+spawn_vertical_angle_jitter = 0.0
+main_material = ExtResource("3_wef8g")
+cap_material = ExtResource("4_ep5sq")
+path_uv_scale = Vector2(1, 1)
 
 [node name="TreeGenBranch" type="Node" parent="TreeGenTree/TreeGenBranch"]
 script = ExtResource("2")
+active = true
+local_seed = 0
+path_length = 3.0
+path_length_randomness = 3.0
+path_length_curve_along_parent = SubResource("Curve_ubo8i")
+path_min_radius = 0.2
+path_max_radius = 0.5
+path_radius_curve = SubResource("Curve_rkj7p")
+path_radius_curve_along_parent = null
+end_cap_flat = true
+path_noise_period = 16.005
+path_noise_octaves = 10
+path_noise_amplitude = 3.635
+path_noise_curve = 1.7411
+path_seek_sun = 0.015
+spawn_along_base_amount = 2
+spawn_along_amount_per_unit = 0.0
+spawn_along_begin_ratio = 0.7
+spawn_along_end_ratio = 1.0
+spawn_along_jitter = 5.0
+spawn_around_amount = 5
+spawn_around_jitter = -0.69
+spawn_around_offset = 0.0
+spawn_skip_probability = 0.0
+spawn_vertical_angle = 0.962
+spawn_vertical_angle_jitter = 0.125
+main_material = ExtResource("3_wef8g")
+cap_material = ExtResource("4_ep5sq")
+path_uv_scale = Vector2(1, 1)
 
 [node name="TreeGenBranch" type="Node" parent="TreeGenTree/TreeGenBranch/TreeGenBranch"]
 script = ExtResource("2")
+active = true
+local_seed = 0
+path_length = 3.0
+path_length_randomness = 0.0
+path_length_curve_along_parent = SubResource("Curve_jarwg")
+path_min_radius = 0.01
+path_max_radius = 0.2
+path_radius_curve = SubResource("Curve_sicvj")
+path_radius_curve_along_parent = null
+end_cap_flat = true
+path_noise_period = 16.0
+path_noise_octaves = 3
+path_noise_amplitude = 0.0
+path_noise_curve = 1.0
+path_seek_sun = 0.0
+spawn_along_base_amount = 10
+spawn_along_amount_per_unit = 0.0
+spawn_along_begin_ratio = 0.39
+spawn_along_end_ratio = 1.0
+spawn_along_jitter = 1.295
+spawn_around_amount = 1
+spawn_around_jitter = 0.94
+spawn_around_offset = -0.845
+spawn_skip_probability = 0.0
+spawn_vertical_angle = 1.0472
+spawn_vertical_angle_jitter = 0.0
+main_material = ExtResource("3_wef8g")
+cap_material = ExtResource("4_ep5sq")
+path_uv_scale = Vector2(1, 1)
 
 [node name="TreeGenLeaf" type="Node" parent="TreeGenTree/TreeGenBranch/TreeGenBranch/TreeGenBranch"]
 script = ExtResource("5")
+active = true
+local_seed = 0
+leaf_scale = 1.0
+leaf_scale_jitter = null
+spawn_along_base_amount = 10
+spawn_along_amount_per_unit = 0.0
+spawn_along_begin_ratio = 0.0
+spawn_along_end_ratio = 1.0
+spawn_along_jitter = 0.0
+spawn_around_amount = 3
+spawn_around_jitter = 0.75
+spawn_around_offset = 0.0
+spawn_skip_probability = 0.0
+spawn_vertical_angle = 1.0472
+spawn_vertical_angle_jitter = 0.87
+leaf_material = ExtResource("6_m53qe")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.651225, -0.258396, 0.713539, 0, 0.940247, 0.340494, -0.758885, -0.221738, 0.612312, 18.6414, 8.68301, 10.1811)

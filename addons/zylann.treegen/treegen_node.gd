@@ -161,7 +161,7 @@ func _get(p_key: StringName) -> Variant:
 
 	elif p_key.begins_with("spawn_"):
 		if p_key in _spawn_properties:
-			var key = p_key.right(6)
+			var key = p_key.replace("spawn_","")
 			return _data.get_spawn_params().get(key)
 
 	return null
@@ -175,7 +175,7 @@ func _set(p_key: StringName, value) -> bool:
 	
 	elif p_key.begins_with("spawn_"):
 		if p_key in _spawn_properties:
-			var key = p_key.right(6)
+			var key = p_key.replace("spawn_","")
 			_data.get_spawn_params().set(key, value)
 			_on_data_changed()
 			return true

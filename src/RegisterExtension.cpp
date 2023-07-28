@@ -14,6 +14,8 @@
 /// @file
 /// Register our classes with Godot.
 
+using namespace Zylann::TreeGen;
+
 namespace
 {
     /// @brief Called by Godot to let us register our classes with Godot.

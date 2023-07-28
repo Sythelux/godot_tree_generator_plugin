@@ -5,6 +5,18 @@ using namespace godot;
 
 TG_PathParams::TG_PathParams()
 {
+    length = 15.f;
+    length_randomness = 0.f;
+    min_radius = 0.3f;
+    max_radius = 1.0f;
+    noise_period = 16.f;
+    noise_octaves = 3;
+    noise_amplitude = 0.f;
+    noise_curve = 1.f;
+    end_cap_flat = true;
+    seek_sun = 0.f;
+    main_material_index = 0;
+    cap_material_index = 0;
     uv_scale = Vector2( 1.f, 1.f );
 }
 TG_PathParams::~TG_PathParams()
@@ -12,14 +24,15 @@ TG_PathParams::~TG_PathParams()
 }
 void TG_PathParams::_bind_methods()
 {
-    //TODO: please please please tell me someone, when there is a better way for this. I can't believe there is no code generator for bindings
+    // TODO: please please please tell me someone, when there is a better way for this. I can't believe there is no code generator for bindings
     ClassDB::bind_method( D_METHOD( "get_length" ), &TG_PathParams::getLength );
     ClassDB::bind_method( D_METHOD( "set_length", "length" ), &TG_PathParams::setLength );
     ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "length" ), "set_length", "get_length" );
 
-    //    ClassDB::bind_method(D_METHOD("get_length_curve_along_parent"), &TG_PathParams::getLengthCurveAlongParent);
-    //    ClassDB::bind_method(D_METHOD("set_length_curve_along_parent", "length"), &TG_PathParams::setLengthCurveAlongParent);
-    ADD_PROPERTY( PropertyInfo( Variant::INT, "length" ), "set_length_curve_along_parent", "get_length_curve_along_parent" );
+    // Ref<godot::Curve>
+    ClassDB::bind_method( D_METHOD( "get_length_curve_along_parent" ), &TG_PathParams::_b_getLengthCurveAlongParent );
+    ClassDB::bind_method( D_METHOD( "set_length_curve_along_parent", "length" ), &TG_PathParams::setLengthCurveAlongParent );
+    ADD_PROPERTY( PropertyInfo( Variant::OBJECT, "length_curve_along_parent" ), "set_length_curve_along_parent", "get_length_curve_along_parent" );
 
     ClassDB::bind_method( D_METHOD( "getLengthRandomness" ), &TG_PathParams::getLengthRandomness );
     ClassDB::bind_method( D_METHOD( "setLengthRandomness", "length" ), &TG_PathParams::setLengthRandomness );
@@ -33,13 +46,15 @@ void TG_PathParams::_bind_methods()
     ClassDB::bind_method( D_METHOD( "setMaxRadius", "rad" ), &TG_PathParams::setMaxRadius );
     ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "max_radius" ), "setMaxRadius", "getMaxRadius" );
 
-    //    ClassDB::bind_method(D_METHOD("getRadiusCurve"), &TG_PathParams::getRadiusCurve);
-    //    ClassDB::bind_method(D_METHOD("setRadiusCurve", "p_speed"), &TG_PathParams::setRadiusCurve);
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "radius_curve" ), "setRadiusCurve", "getRadiusCurve" );
+    // Ref<godot::Curve>
+    ClassDB::bind_method( D_METHOD( "getRadiusCurve" ), &TG_PathParams::_b_getRadiusCurve );
+    ClassDB::bind_method( D_METHOD( "setRadiusCurve", "p_speed" ), &TG_PathParams::setRadiusCurve );
+    ADD_PROPERTY( PropertyInfo( Variant::OBJECT, "radius_curve" ), "setRadiusCurve", "getRadiusCurve" );
 
-    //    ClassDB::bind_method(D_METHOD("getMaxRadius"), &TG_PathParams::getMaxRadius);
-    //    ClassDB::bind_method(D_METHOD("setMaxRadius", "rad"), &TG_PathParams::setMaxRadius);
-    //    ClassDB::add_property("TG_PathParams", PropertyInfo(Variant::FLOAT, "radius_curve_along_parent"), "setMaxRadius", "getMaxRadius");
+    // Ref<godot::Curve>
+    //     ClassDB::bind_method(D_METHOD("getMaxRadius"), &TG_PathParams::getMaxRadius);
+    //     ClassDB::bind_method(D_METHOD("setMaxRadius", "rad"), &TG_PathParams::setMaxRadius);
+    //     ClassDB::add_property("TG_PathParams", PropertyInfo(Variant::OBJECT, "radius_curve_along_parent"), "setMaxRadius", "getMaxRadius");
 
     ClassDB::bind_method( D_METHOD( "getNoisePeriod" ), &TG_PathParams::getNoisePeriod );
     ClassDB::bind_method( D_METHOD( "setNoisePeriod", "per" ), &TG_PathParams::setNoisePeriod );
@@ -47,15 +62,15 @@ void TG_PathParams::_bind_methods()
 
     ClassDB::bind_method( D_METHOD( "getNoiseOctaves" ), &TG_PathParams::getNoiseOctaves );
     ClassDB::bind_method( D_METHOD( "setNoiseOctaves", "oct" ), &TG_PathParams::setNoiseOctaves );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "noise_octaves" ), "setNoiseOctaves", "getNoiseOctaves" );
+    ADD_PROPERTY( PropertyInfo( Variant::INT, "noise_octaves" ), "setNoiseOctaves", "getNoiseOctaves" );
 
     ClassDB::bind_method( D_METHOD( "getNoiseAmplitude" ), &TG_PathParams::getNoiseAmplitude );
     ClassDB::bind_method( D_METHOD( "setNoiseAmplitude", "amp" ), &TG_PathParams::setNoiseAmplitude );
     ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "noise_amplitude" ), "setNoiseAmplitude", "getNoiseAmplitude" );
 
     ClassDB::bind_method( D_METHOD( "getNoiseCurve" ), &TG_PathParams::getNoiseCurve );
-    ClassDB::bind_method( D_METHOD( "setNoiseOctaves", "cur" ), &TG_PathParams::setNoiseOctaves );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "noise_curve" ), "setNoiseOctaves", "getNoiseCurve" );
+    ClassDB::bind_method( D_METHOD( "setNoiseCurve", "cur" ), &TG_PathParams::setNoiseCurve );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "noise_curve" ), "setNoiseCurve", "getNoiseCurve" );
 
     ClassDB::bind_method( D_METHOD( "isEndCapFlat" ), &TG_PathParams::isEndCapFlat );
     ClassDB::bind_method( D_METHOD( "setEndCapFlat", "cap" ), &TG_PathParams::setEndCapFlat );
@@ -75,7 +90,7 @@ void TG_PathParams::_bind_methods()
 
     ClassDB::bind_method( D_METHOD( "getUvScale" ), &TG_PathParams::getUvScale );
     ClassDB::bind_method( D_METHOD( "setUvScale", "cap" ), &TG_PathParams::setUvScale );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "uv_scale" ), "setUvScale", "getUvScale" );
+    ADD_PROPERTY( PropertyInfo( Variant::VECTOR2, "uv_scale" ), "setUvScale", "getUvScale" );
 
     /*register_property( "length", &TG_PathParams::length, 15.f );
 
@@ -123,14 +138,6 @@ void TG_PathParams::setLength( float len )
 {
     TG_PathParams::length = len;
 }
-const Ref<Curve> &TG_PathParams::getLengthCurveAlongParent() const
-{
-    return length_curve_along_parent;
-}
-void TG_PathParams::setLengthCurveAlongParent( const Ref<Curve> &lengthCurveAlongParent )
-{
-    length_curve_along_parent = lengthCurveAlongParent;
-}
 float TG_PathParams::getLengthRandomness() const
 {
     return length_randomness;
@@ -155,22 +162,7 @@ void TG_PathParams::setMaxRadius( float maxRadius )
 {
     max_radius = maxRadius;
 }
-const Ref<Curve> &TG_PathParams::getRadiusCurve() const
-{
-    return radius_curve;
-}
-void TG_PathParams::setRadiusCurve( const Ref<Curve> &radiusCurve )
-{
-    radius_curve = radiusCurve;
-}
-const Ref<Curve> &TG_PathParams::getRadiusCurveAlongParent() const
-{
-    return radius_curve_along_parent;
-}
-void TG_PathParams::setRadiusCurveAlongParent( const Ref<Curve> &radiusCurveAlongParent )
-{
-    radius_curve_along_parent = radiusCurveAlongParent;
-}
+
 float TG_PathParams::getNoisePeriod() const
 {
     return noise_period;
@@ -242,4 +234,38 @@ const Vector2 &TG_PathParams::getUvScale() const
 void TG_PathParams::setUvScale( const Vector2 &uvScale )
 {
     uv_scale = uvScale;
+}
+const Ref<Curve> &TG_PathParams::getLengthCurveAlongParent() const
+{
+    return length_curve_along_parent;
+}
+
+Ref<Curve> TG_PathParams::_b_getRadiusCurve() const
+{
+    return radius_curve;
+}
+godot::Ref<Curve> TG_PathParams::_b_getLengthCurveAlongParent() const
+{
+    return length_curve_along_parent;
+}
+
+void TG_PathParams::setLengthCurveAlongParent( const Ref<Curve> &lengthCurveAlongParent )
+{
+    length_curve_along_parent = lengthCurveAlongParent;
+}
+const Ref<Curve> &TG_PathParams::getRadiusCurve() const
+{
+    return radius_curve;
+}
+void TG_PathParams::setRadiusCurve( const Ref<Curve> &radiusCurve )
+{
+    radius_curve = radiusCurve;
+}
+const Ref<Curve> &TG_PathParams::getRadiusCurveAlongParent() const
+{
+    return radius_curve_along_parent;
+}
+void TG_PathParams::setRadiusCurveAlongParent( const Ref<Curve> &radiusCurveAlongParent )
+{
+    radius_curve_along_parent = radiusCurveAlongParent;
 }

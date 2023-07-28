@@ -6,7 +6,9 @@
 #include <godot_cpp/classes/curve.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 
-class TG_PathParams : public godot::RefCounted
+using namespace godot;
+
+class TG_PathParams : public RefCounted
 {
     GDCLASS( TG_PathParams, RefCounted )
 public:
@@ -14,18 +16,12 @@ public:
     ~TG_PathParams() override;
     float getLength() const;
     void setLength( float length );
-    const godot::Ref<godot::Curve> &getLengthCurveAlongParent() const;
-    void setLengthCurveAlongParent( const godot::Ref<godot::Curve> &lengthCurveAlongParent );
     float getLengthRandomness() const;
     void setLengthRandomness( float lengthRandomness );
     float getMinRadius() const;
     void setMinRadius( float minRadius );
     float getMaxRadius() const;
     void setMaxRadius( float maxRadius );
-    const godot::Ref<godot::Curve> &getRadiusCurve() const;
-    void setRadiusCurve( const godot::Ref<godot::Curve> &radiusCurve );
-    const godot::Ref<godot::Curve> &getRadiusCurveAlongParent() const;
-    void setRadiusCurveAlongParent( const godot::Ref<godot::Curve> &radiusCurveAlongParent );
     float getNoisePeriod() const;
     void setNoisePeriod( float noisePeriod );
     int getNoiseOctaves() const;
@@ -42,50 +38,60 @@ public:
     void setMainMaterialIndex( int mainMaterialIndex );
     int getCapMaterialIndex() const;
     void setCapMaterialIndex( int capMaterialIndex );
-    const godot::Vector2 &getUvScale() const;
-    void setUvScale( const godot::Vector2 &uvScale );
+    const Vector2 &getUvScale() const;
+    void setUvScale( const Vector2 &uvScale );
+    const Ref<Curve> &getLengthCurveAlongParent() const;
+    void setLengthCurveAlongParent( const Ref<Curve> &lengthCurveAlongParent );
+    const Ref<Curve> &getRadiusCurve() const;
+    void setRadiusCurve( const Ref<Curve> &radiusCurve );
+    const Ref<Curve> &getRadiusCurveAlongParent() const;
+    void setRadiusCurveAlongParent( const Ref<Curve> &radiusCurveAlongParent );
 
 protected:
     static void _bind_methods();
 
 private:
     // Base length of the branch in space units
-    float length = 15.f;
+    float length;
     // Modulates the length depending on where the branch spawns on the parent.
-    godot::Ref<godot::Curve> length_curve_along_parent;
-    float length_randomness = 0.f;
+    Ref<Curve> length_curve_along_parent;
+    float length_randomness;
 
     // Radius at the beginning at the branch
-    float min_radius = 0.3f;
+    float min_radius;
     // Radius at the end of the branch
-    float max_radius = 1.0f;
+    float max_radius;
     // How radius progresses between its start and end value.
-    godot::Ref<godot::Curve> radius_curve;
+    Ref<Curve> radius_curve;
     // Modulates the radii depending on where the branch spawns on the parent
-    godot::Ref<godot::Curve> radius_curve_along_parent;
+    Ref<Curve> radius_curve_along_parent;
 
     // Distort the path. Acts as modifier.
-    float noise_period = 16.f;
-    int noise_octaves = 3;
-    float noise_amplitude = 0.f;
+    float noise_period;
+    int noise_octaves;
+    float noise_amplitude;
     // Modulates noise amplitude along path.
     // This is calculated as `pow(offset / length, noise_curve)`
-    float noise_curve = 1.f;
+    float noise_curve;
 
     // User-defined curve for the branch.
     // If set, will serve as a base for positional data.
     // Modifiers will still apply on top of it.
     // var authored_curve : Curve
 
-    bool end_cap_flat = true;
+    bool end_cap_flat;
 
     // Modifier to the growth angle to make the branch tend upward.
     // Negative values makes branches tend downward.
-    float seek_sun = 0.f;
+    float seek_sun;
 
-    int main_material_index = 0;
-    int cap_material_index = 0;
-    godot::Vector2 uv_scale;
+    int main_material_index;
+    int cap_material_index;
+    Vector2 uv_scale;
+
+    Ref<Curve> _b_getLengthCurveAlongParent() const;
+    Ref<Curve> _b_getRadiusCurve() const;
+
 };
 
 #endif // TG_PATH_PARAMS_H

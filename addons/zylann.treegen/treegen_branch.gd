@@ -217,7 +217,7 @@ func _get(p_key: StringName) -> Variant:
 
 	elif p_key.begins_with("path_"):
 		if p_key in _path_properties:
-			var key = p_key.right(5)
+			var key = p_key.replace("path_","")
 			return _data.get_path_params().get(key)
 
 	return null
@@ -246,7 +246,7 @@ func _set(p_key: StringName, value) -> bool:
 	
 	elif p_key.begins_with("path_"):
 		if p_key in _path_properties:
-			var key = p_key.right(5)
+			var key = p_key.replace("path_","")
 			if _path_properties[p_key] == TYPE_OBJECT:
 				_set_resource_property(_data.get_path_params(), key, value)
 			else:
