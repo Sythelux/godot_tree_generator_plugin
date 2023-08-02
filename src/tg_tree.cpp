@@ -442,7 +442,7 @@ namespace Zylann::TreeGen
     static void combine_mesh_surfaces( const TG_NodeInstance &node_instance, std::vector<TG_SurfaceData> &surfaces_per_material, const godot::Transform3D &parent_transform )
     {
 
-        for ( size_t surface_index = 0; surface_index < node_instance.surfaces.size(); ++surface_index )
+        for ( size_t surface_index = 0; surface_index < node_instance.getSurfaces().size(); ++surface_index )
         {
             if ( surface_index >= surfaces_per_material.size() )
             {
@@ -450,9 +450,9 @@ namespace Zylann::TreeGen
             }
 
             TG_SurfaceData &dst_surface = surfaces_per_material[surface_index];
-            const TG_SurfaceData &src_surface = node_instance.surfaces[surface_index];
+            const TG_SurfaceData &src_surface = node_instance.getSurfaces()[surface_index];
 
-            const godot::Transform3D transform = parent_transform * node_instance.local_transform;
+            const godot::Transform3D transform = parent_transform * node_instance.getLocalTransform();
 
             const size_t vertices_begin_index = dst_surface.positions.size();
             const size_t vertices_count = src_surface.positions.size();
@@ -471,9 +471,9 @@ namespace Zylann::TreeGen
             transform_tangents( dst_surface.tangents, vertices_begin_index, vertices_count, transform.basis );
             offset_indices( dst_surface.indices, indices_begin_index, indices_count, static_cast<int>( vertices_begin_index ) );
 
-            for ( size_t i = 0; i < node_instance.children.size(); ++i )
+            for ( size_t i = 0; i < node_instance.getChildren().size(); ++i )
             {
-                combine_mesh_surfaces( **node_instance.children[i], surfaces_per_material, transform );
+                combine_mesh_surfaces( **node_instance.getChildren()[i], surfaces_per_material, transform );
             }
         }
     }
@@ -482,7 +482,7 @@ namespace Zylann::TreeGen
     {
         std::vector<TG_SurfaceData> surfaces;
 
-        combine_mesh_surfaces( root_node_instance, surfaces, root_node_instance.local_transform );
+        combine_mesh_surfaces( root_node_instance, surfaces, root_node_instance.getLocalTransform() );
 
         godot::Array gd_surfaces;
         gd_surfaces.resize( static_cast<int>( surfaces.size() ) );
@@ -509,7 +509,8 @@ namespace Zylann::TreeGen
     {
         const TG_LeafParams &leaf_params = node.get_leaf_params();
 
-        TG_SurfaceData &surface = get_or_create_surface( node_instance.surfaces, leaf_params.getMaterialIndex() );
+        auto surfaces = node_instance.getSurfaces();
+        TG_SurfaceData &surface = get_or_create_surface( surfaces , leaf_params.getMaterialIndex() );
         const godot::Transform3D trans = godot::Transform3D(); // node_instance.local_transform;
 
         float scale = leaf_params.getScale();
@@ -560,12 +561,12 @@ namespace Zylann::TreeGen
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    int TG_Tree::get_global_seed() const
+    int TG_Tree::getGlobalSeed() const
     {
         return _global_seed;
     }
 
-    void TG_Tree::set_global_seed( int p_seed )
+    void TG_Tree::setGlobalSeed( int p_seed )
     {
         _global_seed = p_seed;
     }
@@ -656,7 +657,7 @@ namespace Zylann::TreeGen
             return;
         }
 
-        const float path_length = node_instance.path_distances.back();
+        const float path_length = node_instance.getPathDistances().back();
         std::vector<SpawnInfo> spawns;
 
         // Process children
@@ -680,16 +681,16 @@ namespace Zylann::TreeGen
                 const SpawnInfo &spawn_info = spawns[j];
                 const float offset = spawn_info.offset_ratio * path_length;
                 // TODO Sample parent radius and offset child accordingly
-                const godot::Transform3D path_trans = interpolate_path( node_instance.path, node_instance.path_distances, offset );
+                const godot::Transform3D path_trans = interpolate_path( node_instance.getPath(), node_instance.getPathDistances(), offset );
 
                 godot::Ref<TG_NodeInstance> child_node_instance;
                 child_node_instance.instantiate();
-                child_node_instance->offset_ratio = spawn_info.offset_ratio;
-                child_node_instance->local_transform = godot::Transform3D( path_trans.basis * spawn_info.basis, path_trans.origin );
+                child_node_instance->setOffsetRatio(spawn_info.offset_ratio);
+                child_node_instance->setLocalTransform(godot::Transform3D( path_trans.basis * spawn_info.basis, path_trans.origin ));
 
-                process_node( child, **child_node_instance, child_node_instance->local_transform.basis.inverse().xform( sun_dir_local ), **child_rng );
+                process_node( child, **child_node_instance, child_node_instance->getLocalTransform().basis.inverse().xform( sun_dir_local ), **child_rng );
 
-                node_instance.children.push_back( child_node_instance );
+                node_instance.addChild( child_node_instance );
             }
         }
     }
@@ -699,7 +700,7 @@ namespace Zylann::TreeGen
 
         const TG_SpawnParams &spawn_params = node.get_spawn_params();
 
-        const float relative_offset_ratio = ( node_instance.offset_ratio - spawn_params.getAlongBeginRatio() ) / ( spawn_params.getAlongEndRatio() - spawn_params.getAlongBeginRatio() );
+        const float relative_offset_ratio = ( node_instance.getOffsetRatio() - spawn_params.getAlongBeginRatio() ) / ( spawn_params.getAlongEndRatio() - spawn_params.getAlongBeginRatio() );
 
         const TG_PathParams &path_params = node.get_path_params();
 
@@ -725,8 +726,8 @@ namespace Zylann::TreeGen
 
         godot::Basis sun_basis;
 
-        std::vector<godot::Transform3D> &path = node_instance.path;
-        std::vector<float> &radii = node_instance.path_radii;
+        std::vector<Transform3D> path = node_instance.getPath();
+        std::vector<float> radii = node_instance.getPathRadii();
         path.clear();
         radii.clear();
 
@@ -773,20 +774,17 @@ namespace Zylann::TreeGen
             noise_x.instantiate();
             noise_x->set_seed( _global_seed + node.get_local_seed() );
             noise_x->set_fractal_octaves( path_params.getNoiseOctaves() );
-            //        noise_x->set_period( path_params.noise_period ); //TODO. what is the alternative
-            //        in gd4 to this ~Syd
+            //        noise_x->set_period( path_params.noise_period ); //TODO. what is the alternative in gd4 to this ~Syd
 
             noise_y.instantiate();
             noise_y->set_seed( _global_seed + node.get_local_seed() + 1 );
             noise_y->set_fractal_octaves( path_params.getNoiseOctaves() );
-            //        noise_y->set_period( path_params.noise_period ); //TODO. what is the alternative
-            //        in gd4 to this ~Syd
+            //        noise_y->set_period( path_params.noise_period ); //TODO. what is the alternative in gd4 to this ~Syd
 
             noise_z.instantiate();
             noise_z->set_seed( _global_seed + node.get_local_seed() + 2 );
             noise_z->set_fractal_octaves( path_params.getNoiseOctaves() );
-            //        noise_z->set_period( path_params.noise_period ); //TODO. what is the alternative
-            //        in gd4 to this ~Syd
+            //        noise_z->set_period( path_params.noise_period ); //TODO. what is the alternative in gd4 to this ~Syd
 
             for ( int i = 0; i < point_count; ++i )
             {
@@ -809,7 +807,7 @@ namespace Zylann::TreeGen
         // TODO Optimize path so straight parts have less points
 
         // Bake distances
-        std::vector<float> &distances = node_instance.path_distances;
+        std::vector<float> distances = node_instance.getPathDistances();
         distances.clear();
         distances.push_back( 0 );
         for ( size_t i = 1; i < path.size(); ++i )
@@ -820,7 +818,8 @@ namespace Zylann::TreeGen
         // Recalculate orientations after modifiers
         calc_orientations( path, segment_length );
 
-        generate_path_mesh( node_instance.surfaces, path, radii, distances, _mesh_divisions_per_unit, path_params.isEndCapFlat(), path_params.getMainMaterialIndex(), path_params.getCapMaterialIndex(), path_params.getUvScale(), _constant_mesh_divisions );
+        auto surfaces = node_instance.getSurfaces();
+        generate_path_mesh( surfaces, path, radii, distances, _mesh_divisions_per_unit, path_params.isEndCapFlat(), path_params.getMainMaterialIndex(), path_params.getCapMaterialIndex(), path_params.getUvScale(), _constant_mesh_divisions );
     }
 
     void TG_Tree::generate_spawns( std::vector<SpawnInfo> &transforms, const TG_SpawnParams &params, godot::RandomNumberGenerator &rng, float parent_length )
@@ -872,9 +871,9 @@ namespace Zylann::TreeGen
 
     void TG_Tree::_bind_methods()
     {
-        godot::ClassDB::bind_method( godot::D_METHOD( "set_global_seed" ), &TG_Tree::set_global_seed );
-        godot::ClassDB::bind_method( godot::D_METHOD( "get_global_seed" ), &TG_Tree::get_global_seed );
-        ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "global_seed" ), "set_global_seed", "get_global_seed" );
+        godot::ClassDB::bind_method( godot::D_METHOD( "setGlobalSeed" ), &TG_Tree::setGlobalSeed );
+        godot::ClassDB::bind_method( godot::D_METHOD( "getGlobalSeed" ), &TG_Tree::getGlobalSeed );
+        ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "global_seed" ), "setGlobalSeed", "getGlobalSeed" );
 
         godot::ClassDB::bind_method( godot::D_METHOD( "get_mesh_divisions_per_unit" ), &TG_Tree::get_mesh_divisions_per_unit );
         godot::ClassDB::bind_method( godot::D_METHOD( "set_mesh_divisions_per_unit" ), &TG_Tree::set_mesh_divisions_per_unit );

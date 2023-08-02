@@ -26,39 +26,37 @@ struct TG_SurfaceData
 class TG_NodeInstance : public godot::RefCounted
 {
     GDCLASS( TG_NodeInstance, godot::RefCounted )
+    void addChild( godot::Ref<TG_NodeInstance> param );
+
 public:
     TG_NodeInstance();
     ~TG_NodeInstance() override;
 
-    int get_child_count() const
-    {
-        return static_cast<int>( children.size() );
-    }
+    int getChildCount() const;
+    godot::Ref<TG_NodeInstance> getChildAt( int i );
+    int getPathSize() const;
+    godot::Transform3D getPathTransform( int i ) const;
+    const godot::Transform3D &getLocalTransform() const;
+    void setLocalTransform( const godot::Transform3D &localTransform );
+    const std::vector<TG_SurfaceData> &getSurfaces() const;
+    void setSurfaces( const std::vector<TG_SurfaceData> &surfaces );
+    float getOffsetRatio() const;
+    void setOffsetRatio( float offsetRatio );
+    const std::vector<godot::Transform3D> &getPath() const;
+    void setPath( const std::vector<godot::Transform3D> &path );
+    const std::vector<float> &getPathDistances() const;
+    void setPathDistances( const std::vector<float> &pathDistances );
+    const std::vector<float> &getPathRadii() const;
+    void setPathRadii( const std::vector<float> &pathRadii );
+    const std::vector<godot::Ref<TG_NodeInstance>> &getChildren() const;
+    void setChildren( const std::vector<godot::Ref<TG_NodeInstance>> &children );
 
-    godot::Ref<TG_NodeInstance> get_child( int i )
-    {
-        ERR_FAIL_INDEX_V( i, children.size(), godot::Ref<TG_NodeInstance>() );
-        return children[i];
-    }
-
-    int get_path_size() const
-    {
-        return static_cast<int>( path.size() );
-    }
-
-    godot::Transform3D get_path_transform( int i ) const
-    {
-        ERR_FAIL_INDEX_V( i, path.size(), godot::Transform3D() );
-        return path[i];
-    }
-
-    // Internal
-
+private:
     godot::Transform3D local_transform;
     std::vector<TG_SurfaceData> surfaces;
 
     // Where is the node instance along its parent, as a 0 to 1 ratio
-    float offset_ratio = 0.f;
+    float offset_ratio;
 
     std::vector<godot::Transform3D> path;
     std::vector<float> path_distances;

@@ -28,8 +28,8 @@ namespace Zylann::TreeGen
 
         static const int MAX_MATERIALS = 32;
 
-        int get_global_seed() const;
-        void set_global_seed( int p_seed );
+        int getGlobalSeed() const;
+        void setGlobalSeed( int p_seed );
 
         float get_mesh_divisions_per_unit() const;
         void set_mesh_divisions_per_unit( float d );

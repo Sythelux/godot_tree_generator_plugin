@@ -21,71 +21,6 @@ TG_SpawnParams::~TG_SpawnParams()
 {
 }
 
-void TG_SpawnParams::_bind_methods()
-{
-    ClassDB::bind_method( D_METHOD( "getAlongBaseAmount" ), &TG_SpawnParams::getAlongBaseAmount );
-    ClassDB::bind_method( D_METHOD( "setAlongBaseAmount", "alongBaseAmount" ), &TG_SpawnParams::setAlongBaseAmount );
-    ADD_PROPERTY( PropertyInfo( Variant::INT, "along_base_amount" ), "setAlongBaseAmount", "getAlongBaseAmount" );
-
-    ClassDB::bind_method( D_METHOD( "getAlongAmountPerUnit" ), &TG_SpawnParams::getAlongAmountPerUnit );
-    ClassDB::bind_method( D_METHOD( "setAlongAmountPerUnit", "alongAmountPerUnit" ), &TG_SpawnParams::setAlongAmountPerUnit );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_amount_per_unit" ), "setAlongAmountPerUnit", "getAlongAmountPerUnit" );
-
-    ClassDB::bind_method( D_METHOD( "getAlongBeginRatio" ), &TG_SpawnParams::getAlongBeginRatio );
-    ClassDB::bind_method( D_METHOD( "setAlongBeginRatio", "alongBeginRatio" ), &TG_SpawnParams::setAlongBeginRatio );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_begin_ratio" ), "setAlongBeginRatio", "getAlongBeginRatio" );
-
-    ClassDB::bind_method( D_METHOD( "getAlongEndRatio" ), &TG_SpawnParams::getAlongEndRatio );
-    ClassDB::bind_method( D_METHOD( "setAlongEndRatio", "alongEndRatio" ), &TG_SpawnParams::setAlongEndRatio );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_end_ratio" ), "setAlongEndRatio", "getAlongEndRatio" );
-
-    ClassDB::bind_method( D_METHOD( "getAlongJitter" ), &TG_SpawnParams::getAlongJitter );
-    ClassDB::bind_method( D_METHOD( "setAlongJitter", "alongJitter" ), &TG_SpawnParams::setAlongJitter );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_jitter" ), "setAlongJitter", "getAlongJitter" );
-
-    ClassDB::bind_method( D_METHOD( "getSkipProbability" ), &TG_SpawnParams::getSkipProbability );
-    ClassDB::bind_method( D_METHOD( "setSkipProbability", "skipProbability" ), &TG_SpawnParams::setSkipProbability );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "skip_probability" ), "setSkipProbability", "getSkipProbability" );
-
-    ClassDB::bind_method( D_METHOD( "getAroundAmount" ), &TG_SpawnParams::getAroundAmount );
-    ClassDB::bind_method( D_METHOD( "setAroundAmount", "aroundAmount" ), &TG_SpawnParams::setAroundAmount );
-    ADD_PROPERTY( PropertyInfo( Variant::INT, "around_amount" ), "setAroundAmount", "getAroundAmount" );
-
-    ClassDB::bind_method( D_METHOD( "getAroundJitter" ), &TG_SpawnParams::getAroundJitter );
-    ClassDB::bind_method( D_METHOD( "setAroundJitter", "aroundJitter" ), &TG_SpawnParams::setAroundJitter );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "around_jitter" ), "setAroundJitter", "getAroundJitter" );
-
-    ClassDB::bind_method( D_METHOD( "getAroundOffset" ), &TG_SpawnParams::getAroundOffset );
-    ClassDB::bind_method( D_METHOD( "setAroundOffset", "aroundOffset" ), &TG_SpawnParams::setAroundOffset );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "around_offset" ), "setAroundOffset", "getAroundOffset" );
-
-    ClassDB::bind_method( D_METHOD( "getVerticalAngle" ), &TG_SpawnParams::getVerticalAngle );
-    ClassDB::bind_method( D_METHOD( "setVerticalAngle", "verticalAngle" ), &TG_SpawnParams::setVerticalAngle );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "vertical_angle" ), "setVerticalAngle", "getVerticalAngle" );
-
-    ClassDB::bind_method( D_METHOD( "getVerticalAngleJitter" ), &TG_SpawnParams::getVerticalAngleJitter );
-    ClassDB::bind_method( D_METHOD( "setVerticalAngleJitter", "verticalAngleJitter" ), &TG_SpawnParams::setVerticalAngleJitter );
-    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "vertical_angle_jitter" ), "setVerticalAngleJitter", "getVerticalAngleJitter" );
-
-
-//    godot::register_property( "along_base_amount", &TG_SpawnParams::along_base_amount, 10 );
-//    godot::register_property( "along_amount_per_unit", &TG_SpawnParams::along_amount_per_unit,
-//                              0.f );
-//    godot::register_property( "along_begin_ratio", &TG_SpawnParams::along_begin_ratio, 0.f );
-//    godot::register_property( "along_end_ratio", &TG_SpawnParams::along_end_ratio, 1.f );
-//    godot::register_property( "along_jitter", &TG_SpawnParams::along_jitter, 0.f );
-//    godot::register_property( "skip_probability", &TG_SpawnParams::skip_probability, 0.f );
-//
-//    godot::register_property( "around_amount", &TG_SpawnParams::around_amount, 3 );
-//    godot::register_property( "around_jitter", &TG_SpawnParams::around_jitter, 0.75f );
-//    godot::register_property( "around_offset", &TG_SpawnParams::around_offset, 0.f );
-//
-//    godot::register_property( "vertical_angle", &TG_SpawnParams::vertical_angle,
-//                              static_cast<float>( Math_PI ) / 3.f );
-//    godot::register_property( "vertical_angle_jitter", &TG_SpawnParams::vertical_angle_jitter,
-//                              0.f );
-}
-
 int TG_SpawnParams::getAlongBaseAmount() const
 {
     return along_base_amount;
@@ -173,4 +108,50 @@ float TG_SpawnParams::getVerticalAngleJitter() const
 void TG_SpawnParams::setVerticalAngleJitter( float verticalAngleJitter )
 {
     vertical_angle_jitter = verticalAngleJitter;
+}
+void TG_SpawnParams::_bind_methods()
+{
+    ClassDB::bind_method( D_METHOD( "getAlongBaseAmount" ), &TG_SpawnParams::getAlongBaseAmount );
+    ClassDB::bind_method( D_METHOD( "setAlongBaseAmount", "alongBaseAmount" ), &TG_SpawnParams::setAlongBaseAmount );
+    ADD_PROPERTY( PropertyInfo( Variant::INT, "along_base_amount" ), "setAlongBaseAmount", "getAlongBaseAmount" );
+
+    ClassDB::bind_method( D_METHOD( "getAlongAmountPerUnit" ), &TG_SpawnParams::getAlongAmountPerUnit );
+    ClassDB::bind_method( D_METHOD( "setAlongAmountPerUnit", "alongAmountPerUnit" ), &TG_SpawnParams::setAlongAmountPerUnit );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_amount_per_unit" ), "setAlongAmountPerUnit", "getAlongAmountPerUnit" );
+
+    ClassDB::bind_method( D_METHOD( "getAlongBeginRatio" ), &TG_SpawnParams::getAlongBeginRatio );
+    ClassDB::bind_method( D_METHOD( "setAlongBeginRatio", "alongBeginRatio" ), &TG_SpawnParams::setAlongBeginRatio );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_begin_ratio" ), "setAlongBeginRatio", "getAlongBeginRatio" );
+
+    ClassDB::bind_method( D_METHOD( "getAlongEndRatio" ), &TG_SpawnParams::getAlongEndRatio );
+    ClassDB::bind_method( D_METHOD( "setAlongEndRatio", "alongEndRatio" ), &TG_SpawnParams::setAlongEndRatio );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_end_ratio" ), "setAlongEndRatio", "getAlongEndRatio" );
+
+    ClassDB::bind_method( D_METHOD( "getAlongJitter" ), &TG_SpawnParams::getAlongJitter );
+    ClassDB::bind_method( D_METHOD( "setAlongJitter", "alongJitter" ), &TG_SpawnParams::setAlongJitter );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "along_jitter" ), "setAlongJitter", "getAlongJitter" );
+
+    ClassDB::bind_method( D_METHOD( "getSkipProbability" ), &TG_SpawnParams::getSkipProbability );
+    ClassDB::bind_method( D_METHOD( "setSkipProbability", "skipProbability" ), &TG_SpawnParams::setSkipProbability );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "skip_probability" ), "setSkipProbability", "getSkipProbability" );
+
+    ClassDB::bind_method( D_METHOD( "getAroundAmount" ), &TG_SpawnParams::getAroundAmount );
+    ClassDB::bind_method( D_METHOD( "setAroundAmount", "aroundAmount" ), &TG_SpawnParams::setAroundAmount );
+    ADD_PROPERTY( PropertyInfo( Variant::INT, "around_amount" ), "setAroundAmount", "getAroundAmount" );
+
+    ClassDB::bind_method( D_METHOD( "getAroundJitter" ), &TG_SpawnParams::getAroundJitter );
+    ClassDB::bind_method( D_METHOD( "setAroundJitter", "aroundJitter" ), &TG_SpawnParams::setAroundJitter );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "around_jitter" ), "setAroundJitter", "getAroundJitter" );
+
+    ClassDB::bind_method( D_METHOD( "getAroundOffset" ), &TG_SpawnParams::getAroundOffset );
+    ClassDB::bind_method( D_METHOD( "setAroundOffset", "aroundOffset" ), &TG_SpawnParams::setAroundOffset );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "around_offset" ), "setAroundOffset", "getAroundOffset" );
+
+    ClassDB::bind_method( D_METHOD( "getVerticalAngle" ), &TG_SpawnParams::getVerticalAngle );
+    ClassDB::bind_method( D_METHOD( "setVerticalAngle", "verticalAngle" ), &TG_SpawnParams::setVerticalAngle );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "vertical_angle" ), "setVerticalAngle", "getVerticalAngle" );
+
+    ClassDB::bind_method( D_METHOD( "getVerticalAngleJitter" ), &TG_SpawnParams::getVerticalAngleJitter );
+    ClassDB::bind_method( D_METHOD( "setVerticalAngleJitter", "verticalAngleJitter" ), &TG_SpawnParams::setVerticalAngleJitter );
+    ADD_PROPERTY( PropertyInfo( Variant::FLOAT, "vertical_angle_jitter" ), "setVerticalAngleJitter", "getVerticalAngleJitter" );
 }

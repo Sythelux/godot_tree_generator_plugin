@@ -37,7 +37,7 @@ var _generated_mesh : Mesh
 
 func set_global_seed(new_seed: int):
 	global_seed = new_seed
-	_generator.set_global_seed(new_seed)
+	_generator.setGlobalSeed(new_seed)
 	if is_inside_tree():
 		generate()
 

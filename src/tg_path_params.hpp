@@ -92,6 +92,7 @@ private:
     Ref<Curve> _b_getLengthCurveAlongParent() const;
     Ref<Curve> _b_getRadiusCurve() const;
 
+    Ref<Curve> _b_getRadiusCurveAlongParent() const;
 };
 
 #endif // TG_PATH_PARAMS_H
